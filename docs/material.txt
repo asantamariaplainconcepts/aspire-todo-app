@@ -1,0 +1,10 @@
+https://youtu.be/LOEYZRE72wE?si=GF6WlcHHJtnLhrcW
+https://www.milanjovanovic.tech/blog/functional-error-handling-in-dotnet-with-the-result-pattern?utm_source=YouTube&utm_medium=social&utm_campaign=13.05.2024
+https://www.milanjovanovic.tech/blog/refactoring-from-an-anemic-domain-model-to-a-rich-domain-model?utm_source=YouTube&utm_medium=social&utm_campaign=13.05.2024
+https://www.milanjovanovic.tech/blog/cqrs-pattern-with-mediatr?utm_source=YouTube&utm_medium=social&utm_campaign=13.05.2024
+https://www.milanjovanovic.tech/blog/extending-httpclient-with-delegating-handlers-in-aspnetcore?utm_source=YouTube&utm_medium=social&utm_campaign=06.05.2024
+https://www.milanjovanovic.tech/blog/getting-the-current-user-in-clean-architecture?utm_source=YouTube&utm_medium=social&utm_campaign=06.05.2024
+https://www.milanjovanovic.tech/blog/vertical-slice-architecture?utm_source=YouTube&utm_medium=social&utm_campaign=06.05.2024
+https://www.milanjovanovic.tech/blog/what-is-a-modular-monolith?utm_source=YouTube&utm_medium=social&utm_campaign=06.05.2024
+What You Can (and Can’t) Do With Filtered Indexes - Brent Ozar Unlimited®
+https://www.brentozar.com/archive/2013/11/what-you-can-and-cant-do-with-filtered-indexes/

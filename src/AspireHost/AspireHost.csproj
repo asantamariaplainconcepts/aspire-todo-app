@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+    
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsAspireHost>true</IsAspireHost>
+        <UserSecretsId>674BE839-727E-48DD-B1D4-9709043539BC</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Azure.Storage.Blobs" />
+        <PackageReference Include="Aspire.Hosting.AppHost"/>
+        <PackageReference Include="Aspire.Hosting.Azure.Redis"/>
+        <PackageReference Include="Aspire.Hosting.Azure.ServiceBus"/>
+        <PackageReference Include="Aspire.Hosting.Azure.Sql"/>
+        <PackageReference Include="Aspire.Hosting.Azure.Storage" />
+        <PackageReference Include="Aspire.Hosting.NodeJs"/>
+        <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+        <PackageReference Include="Aspire.Hosting.RabbitMQ"/>
+        <PackageReference Include="Aspire.Hosting.Seq" />
+        <PackageReference Include="Aspire.Hosting.SqlServer"/>
+        <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer"/>
+        <PackageReference Include="Aspire.Hosting.Redis"/>
+        <PackageReference Include="CommunityToolkit.Aspire.Hosting.NodeJS.Extensions" />
+        <PackageReference Include="CommunityToolkit.Aspire.Hosting.Ollama" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\local\DbSeeder\DbSeeder.csproj"/>
+        <ProjectReference Include="..\..\local\DbService\DbService.csproj" />
+        <ProjectReference Include="..\Api\Api.csproj"/>
+        <ProjectReference Include="..\Todos\Todos.csproj" />
+        <ProjectReference Include="..\Web\Web.csproj"/>
+    </ItemGroup>
+
+</Project>

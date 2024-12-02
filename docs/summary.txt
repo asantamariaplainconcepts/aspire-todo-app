@@ -1,0 +1,9 @@
+﻿TITULO
+
+El camino hacia la observalidad en .Net Core
+
+RESUMEN
+
+La idea es partir de la charla de Vertical Slices de hace dos años, actualizarla y ampliarla con nuevos conceptos y herramientas que han surgido en este tiempo.
+Aplicaremos conceptos como DDD, CQRS, Result Pattern, Cache aside, Outbox Pattern, etc.
+La charla se centrará en cómo podemos mejorar la observabilidad de nuestras aplicaciones, qué herramientas podemos utilizar (Aspire) y cómo podemos hacer que nuestros sistemas sean más fáciles de entender y depurar.

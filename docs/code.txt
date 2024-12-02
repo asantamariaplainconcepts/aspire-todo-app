@@ -1,0 +1,31 @@
+// General
+
+GetTodos 
+GetTodos IFeatureModule
+CreateTodo
+
+// Pipelines
+
+Uncomment Behaiviors
+Caching Behaivior
+GetTodos Add Caching
+Create Todos invalidate caching
+Uncomment ValidationBehaivior
+
+// Events
+
+CompleteTodo Add DomainEvent
+Show Interceptor
+
+
+// aspire
+with docker compose
+show dcp
+show manifest
+
+
+// Test 
+
+Show SliceFixture
+Run Tests
+CompleteTodo 
