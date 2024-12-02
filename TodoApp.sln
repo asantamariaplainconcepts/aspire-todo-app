@@ -43,7 +43,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution files", "solution 
 		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
 		docker-compose.yml = docker-compose.yml
-		readme.md = readme.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E2ETests", "tests\E2ETests\E2ETests.csproj", "{22917C1D-8053-4E73-BB8B-33B000E85F40}"
