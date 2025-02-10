@@ -7,7 +7,6 @@ using static AspireHost.Constants;
 var builder = DistributedApplication.CreateBuilder(args);
 
 var server = builder.AddSqlServer("sql")
-    .WithLifetime(ContainerLifetime.Persistent)
     .PublishAsAzureSqlDatabase()
     .WithDataVolume("db-dotnet-malaga");
 
@@ -20,7 +19,6 @@ var queue = builder.AddRabbitMQ("queue")
     .WithManagementPlugin();
 
 var storage = builder.AddAzureStorage("storage")
-    .RunAsEmulator(x => x.WithLifetime(ContainerLifetime.Persistent))
     .AddBlobs("blobs");
 
 var mail = builder.AddMailDev("mail");
@@ -55,23 +53,14 @@ var spa = builder.AddViteApp("vue", "../spa")
     .WithReference(api)
     .WaitFor(dbService);
 
-builder.Eventing.Subscribe<ResourceReadyEvent>(
-    cache.Resource,
-    static (@event, _) =>
-    {
-        var logger = @event.Services.GetRequiredService<ILogger<Program>>();
-
-        logger.LogInformation("Cache ResourceReadyEvent");
-
-        return Task.CompletedTask;
-    });
-
 if (builder.Environment.EnvironmentName.Contains("Test"))
 {
     api.WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317");
 }
 else
 {
+    server.WithLifetime(ContainerLifetime.Persistent);
+    
     var postgres = builder.AddPostgres("testing-postgres")
         .WithPgWeb()
         .AddDatabase("testing-postgres-db");
