@@ -1,29 +1,19 @@
 using aspire.AppHost.Integrations;
 using AspireHost.Extensions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using static AspireHost.Constants;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var server = builder.AddSqlServer("sql")
-    .PublishAsAzureSqlDatabase()
-    .WithDataVolume("db-dotnet-malaga");
+var sqlServer = builder.AddSqlServer("sql");
 
-var sql = server.AddDatabase(Database);
+var sql = sqlServer.AddDatabase(Database);
+    
 
-var cache = builder.AddRedis("cache")
-    .WithRedisCommander();
+var cache = builder.AddRedis("cache");
 
-var queue = builder.AddRabbitMQ("queue")
-    .WithManagementPlugin();
-
-var storage = builder.AddAzureStorage("storage")
-    .AddBlobs("blobs");
+var queue = builder.AddRabbitMQ("queue");
 
 var mail = builder.AddMailDev("mail");
-
-var seq = builder.AddSeq("seq");
 
 var dbService = builder.AddProject<Projects.DbService>("db-service")
     .WithHttpHealthCheck("/health")
@@ -35,16 +25,13 @@ var api = builder.AddProject<Projects.Api>(Api)
     .WithReference(sql, "SqlServer")
     .WithReference(cache)
     .WithReference(queue)
-    .WithReference(seq)
     .WithReference(mail)
-    .WithReference(storage)
-    .WithExternalHttpEndpoints()
-    .WaitFor(dbService);
+    .WithExternalHttpEndpoints();
 
 var web = builder.AddProject<Projects.Web>("blazor")
     .WithExternalHttpEndpoints()
-    .WithReplicas(2)
     .WithReference(api)
+    .WithReplicas(2)
     .WaitFor(api)
     .WaitFor(dbService);
 
@@ -59,13 +46,25 @@ if (builder.Environment.EnvironmentName.Contains("Test"))
 }
 else
 {
-    server.WithLifetime(ContainerLifetime.Persistent);
+    sqlServer.WithLifetime(ContainerLifetime.Persistent);
+       
+    cache.WithRedisCommander();
+
+    queue.WithManagementPlugin();
+      
+    var storage = builder.AddAzureStorage("storage")
+        .RunAsEmulator()
+        .AddBlobs("blobs");
     
-    var postgres = builder.AddPostgres("testing-postgres")
-        .WithPgWeb()
-        .AddDatabase("testing-postgres-db");
+    var seq = builder.AddSeq("seq");
 
-
+    api.WithReference(seq)
+        .WithReference(storage);
+    
+    // var postgres = builder.AddPostgres("testing-postgres")
+    //     .WithPgWeb()
+    //     .AddDatabase("testing-postgres-db");
+    
     // var ollama = builder.AddOllama("ollama")
     //     .AddModel("phi3.5");
 }

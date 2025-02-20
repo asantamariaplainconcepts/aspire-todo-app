@@ -81,6 +81,7 @@
     <PackageVersion Include="Testcontainers" Version="4.0.0" />
     <PackageVersion Include="Testcontainers.MsSql" Version="4.0.0" />
     <PackageVersion Include="Testcontainers.Redis" Version="4.0.0" />
+    <PackageVersion Include="Testcontainers.RabbitMQ" Version="4.0.0" />
     <PackageVersion Include="dbup" Version="5.0.41" />
     <PackageVersion Include="xunit" Version="2.9.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">

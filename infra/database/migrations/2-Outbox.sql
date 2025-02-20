@@ -1,5 +1,4 @@
-﻿BEGIN TRANSACTION;
-CREATE TABLE [Todos].[InboxState] (
+﻿CREATE TABLE [Todos].[InboxState] (
     [Id] bigint NOT NULL IDENTITY,
     [MessageId] uniqueidentifier NOT NULL,
     [ConsumerId] uniqueidentifier NOT NULL,
@@ -63,10 +62,4 @@ CREATE UNIQUE INDEX [IX_OutboxMessage_InboxMessageId_InboxConsumerId_SequenceNum
 CREATE UNIQUE INDEX [IX_OutboxMessage_OutboxId_SequenceNumber] ON [Todos].[OutboxMessage] ([OutboxId], [SequenceNumber]) WHERE [OutboxId] IS NOT NULL;
 
 CREATE INDEX [IX_OutboxState_Created] ON [Todos].[OutboxState] ([Created]);
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20241117072751_Outbox', N'9.0.0');
-
-COMMIT;
-GO
 

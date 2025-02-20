@@ -8,7 +8,6 @@ public class DbMigrate(ILogger logger)
 {
     public DatabaseUpgradeResult Migrate(string connectionString)
     {
-      
         logger.LogInformation("Migrating database");
 
         var scriptPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "migrations");
@@ -22,7 +21,7 @@ public class DbMigrate(ILogger logger)
             .Build();
 
         var result = upgrader.PerformUpgrade();
-        
+
         if (result.Successful)
         {
             logger.LogInformation("Database migration successful");
@@ -32,33 +31,8 @@ public class DbMigrate(ILogger logger)
             logger.LogError("Database migration failed");
             return result;
         }
-        
+
         logger.LogInformation("Database migration completed");
-        
-            logger.LogInformation("Seeding database");
-        
-        var seedsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "seeds");
-
-        var seeder = DeployChanges.To
-            .SqlDatabase(connectionString)
-            .WithScriptsFromFileSystem(seedsPath)
-            .WithTransactionPerScript()
-            .WithExecutionTimeout(TimeSpan.FromMinutes(5))
-            .LogToConsole()
-            .Build();
-
-        
-        result = seeder.PerformUpgrade();
-        
-        if (result.Successful)
-        {
-            logger.LogInformation("Database seeding successful");
-        }
-        else
-        {
-            logger.LogError("Database seeding failed");
-            return result;
-        }
 
         return result;
     }

@@ -14,9 +14,9 @@ public class GetTodos : IFeatureModule
         app.MapGet("/todos",
                 async (ISender mediator, CancellationToken cancellationToken) =>
                 {
-                    var data = await mediator.Send(new Query(), cancellationToken);
+                    var result = await mediator.Send(new Query(), cancellationToken);
 
-                    return data.Value;
+                    return result.Match(Results.Ok, CustomResults.Problem);
                 })
             .WithName(nameof(GetTodos))
             .WithTags(nameof(Domain.Todo))

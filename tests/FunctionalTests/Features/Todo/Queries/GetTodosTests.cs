@@ -9,7 +9,7 @@ public class GetTodosTestsShould(ApiServiceFixture fixture) : ApiTestBase(fixtur
     public async Task response_ok_()
     {
         // Arrange
-        var todo = await Given.CreateDefaultTodo();
+        await Given.CreateDefaultTodo();
 
         // Act
 

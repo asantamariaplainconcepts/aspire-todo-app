@@ -15,20 +15,18 @@ public class GetTodo : IFeatureModule
                     var request = new Query(id);
 
                     var result = await mediator.Send(request, cancellationToken);
-                    return result is null ? Results.NotFound() : Results.Ok(result);
+                    
+                    return result.Match(Results.Ok, CustomResults.Problem);
+                    
                 })
             .WithName(nameof(GetTodo))
             .WithTags(nameof(Domain.Todo))
             .Produces<Response>()
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status404NotFound);
     }
 
-    public sealed record Query(Guid TodoId) : IQuery<Response>, ICacheRequest
-    {
-        public string CacheKey => $"{nameof(Domain.Todo)}_{TodoId}";
-        public DateTime? AbsoluteExpirationRelativeToNow { get; }
-    }
+    public sealed record Query(Guid TodoId) : IQuery<Response>;
 
     public sealed record Response(Guid Id, string Title, bool IsCompleted);
 
@@ -36,11 +34,12 @@ public class GetTodo : IFeatureModule
     {
         public async Task<Result<Response>> Handle(Query request, CancellationToken cancellationToken = default)
         {
-            return await db.Todos
-                .AsNoTracking()
+            var result =  await db.Todos
                 .Where(t => t.Id == request.TodoId)
                 .Select(td => new Response(td.Id, td.Title, td.Completed))
                 .SingleOrDefaultAsync(cancellationToken);
+            
+            return result is not null ? Result.Success(result) : Result.Failure<Response>(TodoErrors.NotFound(request.TodoId));
         }
     }
 

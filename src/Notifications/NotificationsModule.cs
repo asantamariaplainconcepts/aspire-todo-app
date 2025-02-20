@@ -16,9 +16,9 @@ public static class NotificationsModule
         builder.AddAssemblyServices(typeof(NotificationsModule).Assembly);
 
         builder.Services.RegisterConsumer<TodoCompletedEventConsumer>();
-        
+
         builder.ConfigureMail();
-        
+
         builder.Services.AddOpenTelemetry().WithTracing(x => x.AddSource(Instrumentation.ServiceName));
 
         return builder;

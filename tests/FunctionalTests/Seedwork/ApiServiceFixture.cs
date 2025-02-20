@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Api;
 using DbSeeder;
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Respawn;
 using Testcontainers.MsSql;
+using Testcontainers.RabbitMq;
 using Testcontainers.Redis;
 using Todos.Infrastructure.Persistence;
 
@@ -23,7 +26,13 @@ public sealed class ApiServiceFixture : WebApplicationFactory<Program>, IAsyncLi
 
     private readonly MsSqlContainer _msSqlContainer = new MsSqlBuilder().Build();
     private readonly RedisContainer _redisContainer = new RedisBuilder().Build();
-
+    private readonly RabbitMqContainer _rabbitMqContainer = new Testcontainers.RabbitMq.RabbitMqBuilder().Build();
+    private readonly IContainer _mailDevContainer = new ContainerBuilder()
+        .WithName(Guid.NewGuid().ToString("D"))
+        .WithImage("maildev/maildev:2.0.2")
+        .WithPortBinding(1025, true)
+        .Build();
+    
     public static string ActivitySourceName => "FunctionalTests";
 
     public static ActivitySource ActivitySource { get; } = new(ActivitySourceName);
@@ -36,7 +45,9 @@ public sealed class ApiServiceFixture : WebApplicationFactory<Program>, IAsyncLi
             config.AddInMemoryCollection(new[]
             {
                 new KeyValuePair<string, string?>("ConnectionStrings:SqlServer", _msSqlContainer.GetConnectionString()),
-                new KeyValuePair<string, string?>("ConnectionStrings:redis", _redisContainer.GetConnectionString())
+                new KeyValuePair<string, string?>("ConnectionStrings:redis", _redisContainer.GetConnectionString()),
+                new KeyValuePair<string, string?>("ConnectionStrings:mail", $"smtp://{_mailDevContainer.Hostname}:{_mailDevContainer.GetMappedPublicPort(1025)}"),
+                new KeyValuePair<string, string?>("ConnectionStrings:queue", _rabbitMqContainer.GetConnectionString())
             });
         });
 
@@ -53,6 +64,9 @@ public sealed class ApiServiceFixture : WebApplicationFactory<Program>, IAsyncLi
         using var activityScope = ActivitySource.StartActivity("Tear_Up");
 
         await _msSqlContainer.StartAsync();
+        await _redisContainer.StartAsync();
+        await _mailDevContainer.StartAsync();
+        await _rabbitMqContainer.StartAsync();
 
         // var dbContext = new TodoDbContext(new DbContextOptionsBuilder<TodoDbContext>()
         //     .UseSqlServer(_msSqlContainer.GetConnectionString())
@@ -75,6 +89,9 @@ public sealed class ApiServiceFixture : WebApplicationFactory<Program>, IAsyncLi
     {
         using var activityScope = ActivitySource.StartActivity("Tear_Down");
         await _msSqlContainer.StopAsync();
+        await _redisContainer.StopAsync();
+        await _mailDevContainer.StopAsync();
+        await _rabbitMqContainer.StopAsync();
     }
 
     public async Task Reset()

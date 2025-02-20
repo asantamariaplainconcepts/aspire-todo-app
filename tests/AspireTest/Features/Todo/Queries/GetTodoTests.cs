@@ -12,7 +12,6 @@ public class GetTodoTestsShould(ApiServiceFixture fixture) : ApiTestBase(fixture
         var todo = await Given.CreateDefaultTodo();
 
         // Act
-
         var response = await Given.TodoClient.GetAsync(ApiDefinition.V1.Todo.GetTodo(todo.Id));
 
         // Assert

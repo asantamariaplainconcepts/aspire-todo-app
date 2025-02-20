@@ -1,23 +1,19 @@
+using Api;
 using Hellang.Middleware.ProblemDetails;
-using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BuildingBlocks.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Notifications;
 using Todos;
-using Todos.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApiServices();
 
-builder.AddSeqEndpoint("seq");
-
+builder.AddCustomMasstransit();
+builder.AddCustomSeqEndpoint();
 builder.Services.AddSignalR();
-
-AddCustomMasstransit(builder);
 
 TodosModule.Install(builder);
 NotificationsModule.Install(builder);
@@ -40,26 +36,3 @@ NotificationsModule.Map(app);
 app.MapEndpoints();
 
 app.Run();
-
-void AddCustomMasstransit(WebApplicationBuilder webApplicationBuilder)
-{
-    var host = builder.Configuration.GetConnectionString("queue");
-
-    webApplicationBuilder.Services.AddMassTransit(busConfigurator =>
-    {
-        busConfigurator.SetKebabCaseEndpointNameFormatter();
-
-        busConfigurator.UsingRabbitMq((context, cfg) =>
-        {
-            cfg.Host(host);
-            cfg.ConfigureEndpoints(context);
-        });
-
-        busConfigurator.AddEntityFrameworkOutbox<TodoDbContext>(options =>
-        {
-            options.UseSqlServer();
-            options.UseBusOutbox();
-            options.DisableInboxCleanupService();
-        });
-    });
-}
