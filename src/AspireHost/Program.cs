@@ -61,9 +61,9 @@ else
     api.WithReference(seq)
         .WithReference(storage);
     
-    // var postgres = builder.AddPostgres("testing-postgres")
-    //     .WithPgWeb()
-    //     .AddDatabase("testing-postgres-db");
+    var postgres = builder.AddPostgres("testing-postgres")
+        .WithPgAdmin()
+        .AddDatabase("testing-postgres-db");
     
     // var ollama = builder.AddOllama("ollama")
     //     .AddModel("phi3.5");
