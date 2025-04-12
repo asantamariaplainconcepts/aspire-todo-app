@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using BuildingBlocks.DependencyInjection;
-using MassTransit.Configuration;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notifications.Diagnostics;
@@ -15,9 +13,10 @@ public static class NotificationsModule
     {
         builder.AddAssemblyServices(typeof(NotificationsModule).Assembly);
 
-        builder.Services.RegisterConsumer<TodoCompletedEventConsumer>();
-
         builder.ConfigureMail();
+        
+        builder.Services.AddTransient<TodoCompletedEventConsumer>();
+        builder.Services.AddTransient<TodoCreatedEventConsumer>();
 
         builder.Services.AddOpenTelemetry().WithTracing(x => x.AddSource(Instrumentation.ServiceName));
 

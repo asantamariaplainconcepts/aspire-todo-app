@@ -9,9 +9,13 @@
     <ItemGroup>
         <PackageReference Include="Aspire.Seq" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
-        <PackageReference Include="MassTransit.EntityFrameworkCore" />
+        <PackageReference Include="DotNetCore.CAP" />
+        <PackageReference Include="DotNetCore.CAP.AzureServiceBus" />
+        <PackageReference Include="DotNetCore.CAP.Dashboard" />
+        <PackageReference Include="DotNetCore.CAP.SqlServer" />
         <PackageReference Include="MediatR" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Savorboard.CAP.InMemoryMessageQueue" />
         <PackageReference Include="Swashbuckle.AspNetCore" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />

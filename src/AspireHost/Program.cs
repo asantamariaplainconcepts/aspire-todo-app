@@ -4,69 +4,67 @@ using static AspireHost.Constants;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var sqlServer = builder.AddSqlServer("sql");
+builder.AddDockerComposePublisher();
+
+var sqlServer = builder.AddAzureSqlServer("sql-server");
 
 var sql = sqlServer.AddDatabase(Database);
-    
 
-var cache = builder.AddRedis("cache");
-
-var queue = builder.AddRabbitMQ("queue");
+var cache = builder.AddAzureRedis("cache");
 
 var mail = builder.AddMailDev("mail");
 
 var dbService = builder.AddProject<Projects.DbService>("db-service")
-    .WithHttpHealthCheck("/health")
     .WithHttpCommand("/reset-db", "Reset Database", iconName: "DatabaseLightning")
     .WithReference(sql, "SqlServer")
-    .WaitFor(sql);
+    .WaitFor(sql)
+    .WithExplicitStart();
 
 var api = builder.AddProject<Projects.Api>(Api)
     .WithReference(sql, "SqlServer")
     .WithReference(cache)
-    .WithReference(queue)
     .WithReference(mail)
-    .WithExternalHttpEndpoints();
-
-var web = builder.AddProject<Projects.Web>("blazor")
     .WithExternalHttpEndpoints()
-    .WithReference(api)
-    .WithReplicas(2)
-    .WaitFor(api)
-    .WaitFor(dbService);
+    .WaitFor(sql)
+    .PublishAsDockerFile(cfg => cfg
+    .WithDockerfile("src/AspireHost/Projects/Api/Dockerfile"));
 
 var spa = builder.AddViteApp("vue", "../spa")
     .WithNpmPackageInstallation()
     .WithReference(api)
-    .WaitFor(dbService);
+    .WithOtlpExporter();
 
 if (builder.Environment.EnvironmentName.Contains("Test"))
 {
     api.WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317");
+
+    sqlServer.RunAsContainer(c => c.WithLifetime(ContainerLifetime.Session));
 }
 else
 {
-    sqlServer.WithLifetime(ContainerLifetime.Persistent);
-       
-    cache.WithRedisCommander();
+    sqlServer
+        .RunAsContainer(c => c.WithLifetime(ContainerLifetime.Persistent));
 
-    queue.WithManagementPlugin();
-      
-    var storage = builder.AddAzureStorage("storage")
-        .RunAsEmulator()
-        .AddBlobs("blobs");
+    cache
+        .RunAsContainer(c => c.WithLifetime(ContainerLifetime.Persistent)
+            .WithRedisCommander());
     
     var seq = builder.AddSeq("seq");
-
+    
     api.WithReference(seq)
-        .WithReference(storage);
-    
-    var postgres = builder.AddPostgres("testing-postgres")
-        .WithPgAdmin()
-        .AddDatabase("testing-postgres-db");
-    
-    // var ollama = builder.AddOllama("ollama")
-    //     .AddModel("phi3.5");
+        .WithUrls(ctx =>
+        {
+            ctx.Urls.Add(new ResourceUrlAnnotation
+            {
+                Url = $"{api.GetEndpoint("https").Url}/swagger",
+                DisplayText = "Swagger UI",
+            });
+            ctx.Urls.Add(new ResourceUrlAnnotation
+            {
+                Url = $"{api.GetEndpoint("https").Url}/cap",
+                DisplayText = "Cap UI",
+            });
+        });
 }
 
 builder.Build().Run();

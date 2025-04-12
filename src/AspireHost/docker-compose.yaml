@@ -1,0 +1,105 @@
+services:
+  cache:
+    image: "docker.io/library/redis:7.4"
+    command:
+      - "-c"
+      - "redis-server --requirepass $$REDIS_PASSWORD"
+    entrypoint:
+      - "/bin/sh"
+    environment:
+      REDIS_PASSWORD: "${CACHE_PASSWORD}"
+    ports:
+      - "8000:6379"
+    networks:
+      - "aspire"
+  queue:
+    image: "docker.io/library/rabbitmq:4.0-management"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "${QUEUE_PASSWORD}"
+    ports:
+      - "8001:5672"
+      - "8002:15672"
+    networks:
+      - "aspire"
+  mail:
+    image: "docker.io/maildev/maildev:2.0.2"
+    ports:
+      - "8003:1080"
+      - "8004:1025"
+    networks:
+      - "aspire"
+  db-service:
+    image: "${DB_SERVICE_IMAGE}"
+    environment:
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      HTTP_PORTS: "8005"
+      ConnectionStrings__SqlServer: "Server=tcp:${SQL_SERVER_OUTPUTS_SQLSERVERFQDN},1433;Encrypt=True;Authentication=\"Active Directory Default\";Database=TodoAppDb"
+    ports:
+      - "8006:8005"
+      - "8008:8007"
+    networks:
+      - "aspire"
+  api:
+    image: "${API_IMAGE}"
+    environment:
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      HTTP_PORTS: "8009"
+      ConnectionStrings__SqlServer: "Server=tcp:${SQL_SERVER_OUTPUTS_SQLSERVERFQDN},1433;Encrypt=True;Authentication=\"Active Directory Default\";Database=TodoAppDb"
+      ConnectionStrings__cache: "cache:6379,password=${CACHE_PASSWORD}"
+      ConnectionStrings__queue: "amqp://guest:${QUEUE_PASSWORD}@queue:5672"
+      ConnectionStrings__mail: "smtp://mail:1025"
+      ConnectionStrings__seq: "http://seq:80"
+      ConnectionStrings__blobs: "${STORAGE_OUTPUTS_BLOBENDPOINT}"
+    ports:
+      - "8010:8009"
+      - "8012:8011"
+    networks:
+      - "aspire"
+  blazor:
+    image: "${BLAZOR_IMAGE}"
+    environment:
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      HTTP_PORTS: "8014"
+      services__api__http__0: "http://api:8009"
+    ports:
+      - "8015:8014"
+      - "8017:8016"
+    depends_on:
+      api:
+        condition: "service_started"
+      db-service:
+        condition: "service_started"
+    networks:
+      - "aspire"
+  seq:
+    image: "docker.io/datalust/seq:2024.3"
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "8013:80"
+    networks:
+      - "aspire"
+  testing-postgres:
+    image: "docker.io/library/postgres:17.2"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "${TESTING_POSTGRES_PASSWORD}"
+    ports:
+      - "8018:5432"
+    networks:
+      - "aspire"
+networks:
+  aspire:
+    driver: "bridge"

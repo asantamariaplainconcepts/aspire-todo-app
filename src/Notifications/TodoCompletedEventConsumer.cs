@@ -1,8 +1,9 @@
 ﻿using System.Text.Json;
 using BuildingBlocks.Diagnostics;
 using Contracts;
+using DotNetCore.CAP;
+using DotNetCore.CAP.Messages;
 using FluentEmail.Core;
-using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Notifications.Infrastructure.Hubs;
@@ -12,29 +13,29 @@ namespace Notifications;
 public class TodoCompletedEventConsumer(
     ILogger<TodoCompletedEventConsumer> logger,
     IFluentEmail fluentEmail,
-    IHubContext<TodoHub, ITodoHub> hubContext) : IConsumer<TodoCompletedEvent>
+    IHubContext<TodoHub, ITodoHub> hubContext) : ICapSubscribe
 {
-    public async Task Consume(ConsumeContext<TodoCompletedEvent> context)
+    
+    [CapSubscribe(nameof(TodoCompletedEvent))]
+    public async Task ProcessAsync(TodoCompletedEvent todoCompletedEvent, CancellationToken cancellationToken)
     {
         using var activity = Instrumentation.Source.StartActivity(nameof(TodoCompletedEventConsumer));
 
-        Thread.Sleep(TimeSpan.FromSeconds(3));
-
-        logger.LogInformation("(NOTIFICATIONS) --- Todo {TodoId} has been completed, ",
-            context.Message.Id);
+        
+        logger.LogInformation("(NOTIFICATIONS) --- Todo {TodoId} has been completed, ", todoCompletedEvent.Id);
 
         await hubContext.Clients.All.SendCompleted(new TodoCompleted
         {
-            Title = context.Message.Title
+            Title = todoCompletedEvent.Title
         });
-
+        
         await fluentEmail
             .To("hellO@dotnet.com")
-            .Subject("Todo Created")
-            .Body(JsonSerializer.Serialize(context.Message))
+            .Subject("Todo Completed")
+            .Body(JsonSerializer.Serialize(todoCompletedEvent))
             .SendAsync();
-
+        
         logger.LogInformation("(NOTIFICATIONS) --- Notification sent to all clients for Todo {TodoId}",
-            context.Message.Id);
+            todoCompletedEvent.Id);
     }
 }

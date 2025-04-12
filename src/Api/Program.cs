@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApiServices();
 
-builder.AddCustomMasstransit();
+builder.AddIntegrationCommunucation();
 builder.AddCustomSeqEndpoint();
 builder.Services.AddSignalR();
 

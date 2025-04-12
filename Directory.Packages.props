@@ -7,7 +7,9 @@
   <ItemGroup>
     <PackageVersion Include="Acheve.TestHost" Version="4.0.0" />
     <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.Azure.PostgreSQL" Version="9.2.0" />
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.Docker" Version="9.2.0-preview.1.25209.2" />
     <PackageVersion Include="Aspire.Hosting.Seq" Version="9.2.0" />
     <PackageVersion Include="Aspire.Seq" Version="9.2.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Rabbitmq" Version="9.0.0" />
@@ -37,14 +39,18 @@
     <PackageVersion Include="ColoredConsole" Version="1.0.0" />
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.NodeJS.Extensions" Version="9.3.0" />
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.Ollama" Version="9.3.0" />
+    <PackageVersion Include="DotNetCore.CAP" Version="8.3.3" />
+    <PackageVersion Include="DotNetCore.CAP.AzureServiceBus" Version="8.3.3" />
+    <PackageVersion Include="DotNetCore.CAP.Dashboard" Version="8.3.3" />
+    <PackageVersion Include="DotNetCore.CAP.OpenTelemetry" Version="8.3.3" />
+    <PackageVersion Include="DotNetCore.CAP.SqlServer" Version="8.3.3" />
+    <PackageVersion Include="Savorboard.CAP.InMemoryMessageQueue" Version="8.2.1" />
+    <PackageVersion Include="DotNetCore.CAP.Extensions" Version="8.2.1" />
     <PackageVersion Include="FluentAssertions" Version="6.12.2" />
     <PackageVersion Include="FluentEmail.Core" Version="3.0.2" />
     <PackageVersion Include="FluentEmail.Smtp" Version="3.0.2" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
-    <PackageVersion Include="MassTransit" Version="8.3.1" />
-    <PackageVersion Include="MassTransit.EntityFrameworkCore" Version="8.3.1" />
-    <PackageVersion Include="MassTransit.RabbitMQ" Version="8.3.1" />
     <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />

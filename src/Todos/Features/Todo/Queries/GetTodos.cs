@@ -1,6 +1,4 @@
 ﻿using BuildingBlocks.DomainEvents;
-using Contracts;
-using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Todos.Infrastructure.Persistence;

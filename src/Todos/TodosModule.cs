@@ -15,7 +15,7 @@ public static class TodosModule
         ConfigureTodosDatabase(builder);
 
         builder.Services.AddSingleton<Diagnostics.Diagnostics>();
-
+        
         builder.Services.AddOpenTelemetry()
             .WithMetrics(x => x.AddMeter(Instrumentation.ServiceName))
             .WithTracing(x => x.AddSource(Instrumentation.Source.Name));

@@ -1,33 +1,24 @@
-using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Todos.Infrastructure.Persistence;
+using Savorboard.CAP.InMemoryMessageQueue;
 
 namespace Api;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddCustomMasstransit(this WebApplicationBuilder builder)
+    public static void AddIntegrationCommunucation(this WebApplicationBuilder builder)
     {
-        var host = builder.Configuration.GetConnectionString("queue");
+        var sql = builder.Configuration.GetConnectionString("SqlServer");
 
-        builder.Services.AddMassTransit(busConfigurator =>
+        builder.Services.AddCap(options =>
         {
-            busConfigurator.SetKebabCaseEndpointNameFormatter();
+            options.UseInMemoryMessageQueue();
+            
+            options.UseSqlServer(sql!);
 
-            busConfigurator.UsingRabbitMq((context, cfg) =>
-            {
-                cfg.Host(host);
-                cfg.ConfigureEndpoints(context);
-            });
-
-            busConfigurator.AddEntityFrameworkOutbox<TodoDbContext>(options =>
-            {
-                options.UseSqlServer();
-                options.UseBusOutbox();
-                options.DisableInboxCleanupService();
-            });
+            options.UseDashboard();
         });
     }
 

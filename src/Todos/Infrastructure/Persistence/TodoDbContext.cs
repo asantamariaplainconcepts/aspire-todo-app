@@ -1,5 +1,4 @@
-﻿using MassTransit;
-using Todos.Domain;
+﻿using Todos.Domain;
 
 namespace Todos.Infrastructure.Persistence;
 
@@ -12,8 +11,6 @@ public class TodoDbContext(DbContextOptions<TodoDbContext> options) : DbContext(
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.HasDefaultSchema(nameof(Todos));
-        
-        modelBuilder.AddTransactionalOutboxEntities();
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TodoDbContext).Assembly);
     }

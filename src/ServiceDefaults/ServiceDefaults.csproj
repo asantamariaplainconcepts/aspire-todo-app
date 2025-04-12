@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit" />
+        <PackageReference Include="DotNetCore.CAP.OpenTelemetry" />
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery"/>
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol"/>
