@@ -2,14 +2,14 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
-    <AspireVersion>9.1.0</AspireVersion>
+    <AspireVersion>9.2.0</AspireVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Acheve.TestHost" Version="4.0.0" />
-    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="9.1.0" />
-    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="9.1.0" />
-    <PackageVersion Include="Aspire.Hosting.Seq" Version="9.0.0" />
-    <PackageVersion Include="Aspire.Seq" Version="9.1.0" />
+    <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.Seq" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Seq" Version="9.2.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Rabbitmq" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="$(AspireVersion)" />
@@ -35,8 +35,8 @@
     <PackageVersion Include="Aspire.StackExchange.Redis" Version="$(AspireVersion)" />
     <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="$(AspireVersion)" />
     <PackageVersion Include="ColoredConsole" Version="1.0.0" />
-    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.NodeJS.Extensions" Version="9.1.0" />
-    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.Ollama" Version="9.1.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.NodeJS.Extensions" Version="9.3.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.Ollama" Version="9.3.0" />
     <PackageVersion Include="FluentAssertions" Version="6.12.2" />
     <PackageVersion Include="FluentEmail.Core" Version="3.0.2" />
     <PackageVersion Include="FluentEmail.Smtp" Version="3.0.2" />
@@ -54,11 +54,11 @@
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.SourceGenerator" Version="7.0.0-preview.7.22376.6" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.2" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.4" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.0.0" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.10.4" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.10.4" />
@@ -84,7 +84,7 @@
     <PackageVersion Include="Testcontainers.RabbitMQ" Version="4.0.0" />
     <PackageVersion Include="dbup" Version="5.0.41" />
     <PackageVersion Include="xunit" Version="2.9.2" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
