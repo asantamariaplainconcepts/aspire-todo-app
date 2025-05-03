@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Contracts
 @using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.FluentUI.AspNetCore.Components.Icons.Filled
 @using Todos.Features.Todo.Commands
 @using Todos.Features.Todo.Queries
 @inject IHttpClientFactory httpClientFactory
@@ -21,8 +22,8 @@
     <PropertyColumn Title="Title" Property="@(c => c!.Title)" Align="Align.Start"/>
     <PropertyColumn Title="Completed" Property="@(c => c!.IsCompleted)" Align="Align.Center"/>
     <TemplateColumn Title="Actions" Align="@Align.End">
-        <FluentButton Disabled="context.IsCompleted" aria-label="Complete item" IconEnd="@(new Icons.Regular.Size16.Checkmark())" OnClick="@(() => CompleteTodo(context.Id))"/>
-        <FluentButton aria-label="Delete item" IconEnd="@(new Icons.Regular.Size16.Delete())" OnClick="@(() => DeleteTodo(context.Id))"/>
+        <FluentButton Disabled="context.IsCompleted" aria-label="Complete item" IconEnd="@(new Size16.Checkmark())" OnClick="@(() => CompleteTodo(context.Id))"/>
+        <FluentButton aria-label="Delete item" IconEnd="@(new Size16.Delete())" OnClick="@(() => DeleteTodo(context.Id))"/>
     </TemplateColumn>
 </FluentDataGrid>
 

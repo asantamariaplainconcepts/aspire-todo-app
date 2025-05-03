@@ -3,6 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <UserSecretsId>221f535f-1d45-452e-8857-206e52a675aa</UserSecretsId>
+        <IsPublishable>true</IsPublishable>
         <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
     </PropertyGroup>
 
