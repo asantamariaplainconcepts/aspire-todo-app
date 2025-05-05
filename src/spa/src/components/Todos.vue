@@ -2,7 +2,7 @@
   <form class="flex justify-center">
     <Fieldset legend="New todo">
       <InputText id="new-todo" v-model="newTodoTitle" aria-describedby="New Todo" />
-      <Button @click="addTodo">Add</Button>
+      <Button @click.prevent="addTodo">Add</Button>
     </Fieldset>
   </form>
 
@@ -21,55 +21,60 @@
   </DataTable>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
+interface Todo {
+  id: string;
+  title: string;
+  isCompleted: boolean;
+}
 
-export default {
-  data() {
-    return {
-      todos: [],
-      newTodoTitle: ''
-    };
-  },
-  methods: {
-    async fetchTodos() {
-      try {
-        const response = await axios.get('api/todos');
-        this.todos = response.data;
-      } catch (error) {
-        console.error('Error fetching todos:', error);
-      }
-    },
-    async addTodo() {
-      try {
-        const newTodo = {title: this.newTodoTitle};
-        await axios.post('api/todos', newTodo);
-        this.newTodoTitle = '';
-        await this.fetchTodos();
-      } catch (error) {
-        console.error('Error adding todo:', error);
-      }
-    },
-    async updateTodo(todo) {
-      try {
-        await axios.put(`api/todos/${todo.id}/complete`);
-        await this.fetchTodos();
-      } catch (error) {
-        console.error('Error updating todo:', error);
-      }
-    },
-    async deleteTodo(id) {
-      try {
-        await axios.delete(`api/todos/${id}`);
-        await this.fetchTodos();
-      } catch (error) {
-        console.error('Error deleting todo:', error);
-      }
-    }
-  },
-  mounted() {
-    this.fetchTodos();
+const todos = ref<Todo[]>([]);
+const newTodoTitle = ref('');
+
+const fetchTodos = async (): Promise<void> => {
+  try {
+    const response = await axios.get<Todo[]>('api/todos');
+    todos.value = response.data;
+  } catch (error) {
+    console.error('Error fetching todos:', error);
   }
 };
+
+const addTodo = async (): Promise<void> => {
+  try {
+    if (!newTodoTitle.value.trim()) return;
+
+    const newTodo = { title: newTodoTitle.value };
+    await axios.post('api/todos', newTodo);
+    newTodoTitle.value = '';
+    await fetchTodos();
+  } catch (error) {
+    console.error('Error adding todo:', error);
+  }
+};
+
+const updateTodo = async (todo: Todo): Promise<void> => {
+  try {
+    await axios.put(`api/todos/${todo.id}/complete`);
+    await fetchTodos();
+  } catch (error) {
+    console.error('Error updating todo:', error);
+  }
+};
+
+const deleteTodo = async (id: string): Promise<void> => {
+  try {
+    await axios.delete(`api/todos/${id}`);
+    await fetchTodos();
+  } catch (error) {
+    console.error('Error deleting todo:', error);
+  }
+};
+
+onMounted(() => {
+  fetchTodos();
+});
 </script>

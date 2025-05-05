@@ -1,8 +1,8 @@
 using System.Data;
-using Microsoft.Data.SqlClient;
 using BuildingBlocks.DependencyInjection;
 using BuildingBlocks.DomainEvents;
 using Microsoft.Extensions.Hosting;
+using Npgsql;
 using Todos.Diagnostics;
 using Todos.Infrastructure.Persistence;
 
@@ -27,12 +27,12 @@ public static class TodosModule
 
     private static void ConfigureTodosDatabase(WebApplicationBuilder builder)
     {
-        var connectionString = builder.Configuration.GetConnectionString("SqlServer");
+        var connectionString = builder.Configuration.GetConnectionString("TodoAppDb");
 
         builder.Services.AddDbContext<TodoDbContext>((serviceProvider, optionsBuilder) =>
         {
             optionsBuilder
-                .UseSqlServer(connectionString)
+                .UseNpgsql(connectionString)
                 .EnableSensitiveDataLogging();
 
             var publishDomainEventsInterceptor =
@@ -41,10 +41,10 @@ public static class TodosModule
             optionsBuilder.AddInterceptors(publishDomainEventsInterceptor);
         });
 
-        builder.EnrichSqlServerDbContext<TodoDbContext>();
+        builder.EnrichNpgsqlDbContext<TodoDbContext>();
 
-        builder.Services.AddDbContext<ReadOnlyTodoDbContext>(options => { options.UseSqlServer(connectionString); });
+        builder.Services.AddDbContext<ReadOnlyTodoDbContext>(options => { options.UseNpgsql(connectionString); });
 
-        builder.Services.AddTransient<IDbConnection>(db => new SqlConnection(connectionString));
+        builder.Services.AddTransient<IDbConnection>(db => new NpgsqlConnection(connectionString));
     }
 }

@@ -6,6 +6,7 @@
         <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
         <UserSecretsId>5ec801ff-3100-48d5-9588-850d80531be5</UserSecretsId>
         <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+        <IsPublishable>true</IsPublishable>
     </PropertyGroup>
 
     <ItemGroup>

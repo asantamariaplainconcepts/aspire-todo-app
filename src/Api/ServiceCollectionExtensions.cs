@@ -10,13 +10,13 @@ public static class ServiceCollectionExtensions
 {
     public static void AddIntegrationCommunucation(this WebApplicationBuilder builder)
     {
-        var sql = builder.Configuration.GetConnectionString("SqlServer");
+        var sql = builder.Configuration.GetConnectionString("TodoAppDb");
 
         builder.Services.AddCap(options =>
         {
             options.UseInMemoryMessageQueue();
             
-            options.UseSqlServer(sql!);
+            options.UsePostgreSql(sql!);
 
             options.UseDashboard();
         });

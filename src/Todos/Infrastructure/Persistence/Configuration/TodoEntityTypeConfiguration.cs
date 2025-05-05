@@ -16,7 +16,6 @@ namespace Todos.Infrastructure.Persistence.Configuration
                 .IsRequired();
 
             builder.Property(t => t.Completed)
-                .HasColumnType("BIT")
                 .IsRequired();
         }
     }

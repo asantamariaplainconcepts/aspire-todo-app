@@ -1,9 +1,6 @@
 using DbService;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore.Migrations;
 using ServiceDefaults;
 using Todos.Infrastructure.Persistence;
 
@@ -13,12 +10,13 @@ builder.AddServiceDefaults();
 
 builder.Services.AddDbContext<TodoDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("SqlServer");
+    var connectionString = builder.Configuration.GetConnectionString("TodoAppDb");
 
-    options.UseSqlServer(connectionString, opt =>
+    options.UseNpgsql(connectionString, opt =>
     {
-        opt.MigrationsAssembly(typeof(TodoDbContext).Assembly.GetName()?.Name);
+        opt.MigrationsAssembly(typeof(TodoDbContext).Assembly);
     });
+
 });
 
 builder.Services.AddProblemDetails();
@@ -29,21 +27,18 @@ builder.Services.AddOpenTelemetry()
 builder.Services.AddSingleton<DbInitializer>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<DbInitializer>());
 builder.Services.AddHealthChecks()
-    .AddCheck<DbInitializerHealthCheck>( nameof(DbInitializer), null);
+    .AddCheck<DbInitializerHealthCheck>(nameof(DbInitializer));
 
 var app = builder.Build();
 
 app.UseExceptionHandler();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapPost("/reset-db", async (TodoDbContext db,DbInitializer dbInitializer,CancellationToken cancellationToken) =>
+app.MapPost("/reset-db", async (TodoDbContext db,DbInitializer dbInitializer,CancellationToken cancellationToken) =>
     {
         // Delete and recreate the database. This is useful for development scenarios to reset the database to its initial state.
-        await db.Database.EnsureDeletedAsync();
+       // await db.Database.EnsureDeletedAsync();
         await dbInitializer.InitializeDatabaseAsync(db, cancellationToken);
     });
-}
 
 app.MapDefaultEndpoints();
 

@@ -43,7 +43,7 @@ public sealed class ApiServiceFixture : IAsyncLifetime
         appHost.WithRandomVolumeNames();
         appHost.WithContainersLifetime(ContainerLifetime.Session);
 
-        appHost.Services.AddDbContext<TodoDbContext>(options => options.UseSqlServer(_connectionString));
+        appHost.Services.AddDbContext<TodoDbContext>(options => options.UseNpgsql(_connectionString));
 
         _app = await appHost.BuildAsync();
 

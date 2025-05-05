@@ -1,4 +1,5 @@
-﻿using Todos.Domain;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using Todos.Domain;
 
 namespace Todos.Infrastructure.Persistence;
 
@@ -10,7 +11,7 @@ public class TodoDbContext(DbContextOptions<TodoDbContext> options) : DbContext(
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema(nameof(Todos));
+        modelBuilder.HasDefaultSchema("todos");
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TodoDbContext).Assembly);
     }
@@ -19,10 +20,11 @@ public class TodoDbContext(DbContextOptions<TodoDbContext> options) : DbContext(
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("Server=localhost;Database=Todos;User Id=sa;Password=Password123;");
+            optionsBuilder.UseNpgsql("Server=localhost;Database=Todos;User Id=sa;Password=Password123;");
         }
         else
         {
+            optionsBuilder.ConfigureWarnings( warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
             base.OnConfiguring(optionsBuilder);
         }
     }

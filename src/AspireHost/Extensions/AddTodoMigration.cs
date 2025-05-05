@@ -3,7 +3,7 @@
 internal static class AddTodoMigration
 {
     public static IResourceBuilder<ExecutableResource>? AddTodoDbMigration(this IDistributedApplicationBuilder builder,
-        IResourceBuilder<SqlServerDatabaseResource> sql)
+        IResourceBuilder<PostgresDatabaseResource> sql)
     {
         IResourceBuilder<ExecutableResource>? migrateOperation = default;
 

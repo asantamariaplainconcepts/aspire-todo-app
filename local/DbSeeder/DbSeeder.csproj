@@ -26,6 +26,7 @@
       <Folder Include="..\..\infra\database\seeds\">
         <Link>seeds</Link>
       </Folder>
+      <Folder Include="migrations\" />
     </ItemGroup>
 
 </Project>

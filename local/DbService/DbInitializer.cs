@@ -26,6 +26,7 @@ internal class DbInitializer(IServiceProvider serviceProvider, ILogger<DbInitial
         var sw = Stopwatch.StartNew();
 
         var strategy = dbContext.Database.CreateExecutionStrategy();
+        
         await strategy.ExecuteAsync(dbContext.Database.MigrateAsync, cancellationToken);
 
         await SeedAsync(dbContext, cancellationToken);

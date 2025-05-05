@@ -12,16 +12,16 @@ namespace Todos.Infrastructure.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "Todos");
+                name: "todos");
 
             migrationBuilder.CreateTable(
                 name: "todos",
-                schema: "Todos",
+                schema: "todos",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Completed = table.Column<bool>(type: "BIT", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Completed = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,7 +34,7 @@ namespace Todos.Infrastructure.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "todos",
-                schema: "Todos");
+                schema: "todos");
         }
     }
 }

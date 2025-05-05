@@ -3,16 +3,13 @@ using BuildingBlocks.Diagnostics;
 using Contracts;
 using DotNetCore.CAP;
 using FluentEmail.Core;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Notifications.Infrastructure.Hubs;
 
 namespace Notifications;
 
 public class TodoCreatedEventConsumer(
     ILogger<TodoCreatedEventConsumer> logger,
-    IFluentEmail fluentEmail,
-    IHubContext<TodoHub, ITodoHub> hubContext) : ICapSubscribe
+    IFluentEmail fluentEmail) : ICapSubscribe
 {
     
     [CapSubscribe(nameof(TodoCreatedEvent))]
