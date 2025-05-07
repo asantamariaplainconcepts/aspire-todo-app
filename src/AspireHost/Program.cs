@@ -61,6 +61,7 @@ else
             .WithRedisInsight();
 
         var seq = builder.AddSeq("seq");
+        
         api.WithReference(seq)
             .WithUrls(ctx =>
             {
